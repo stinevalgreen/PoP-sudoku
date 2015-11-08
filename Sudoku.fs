@@ -23,9 +23,6 @@ let print s =
 
 let check rowChecker s =
   let checkRows rows = List.fold (fun c row -> c && (rowChecker row)) true rows
-  let rec checkRows = function
-    | [] -> true
-    | row::rows -> rowChecker row && checkRows rows
   let rec transpose = function
     | []::_ -> []
     | rows ->
