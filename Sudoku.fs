@@ -28,9 +28,6 @@ let isValid s =
         if n <> 0 && List.exists (fun x -> x=n) ns then false
         else isValidRow ns
   let checkRows rows = List.fold (fun c row -> c && (isValidRow row)) true rows
-  let rec checkRows = function
-    | [] -> true
-    | row::rows -> rowChecker row && checkRows rows
   let rec transpose = function
     | []::_ -> []
     | rows ->
