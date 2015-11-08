@@ -21,8 +21,16 @@ let print s =
         printRows rows
   printRows (listify s)
 
-let check rowChecker s =
-  let checkRows rows = List.fold (fun c row -> c && (rowChecker row)) true rows
+let isValid s =
+  let rec isValidRow = function
+    | [] -> true
+    | (n:int)::ns ->
+        if n <> 0 && List.exists (fun x -> x=n) ns then false
+        else isValidRow ns
+  let checkRows rows = List.fold (fun c row -> c && (isValidRow row)) true rows
+  let rec checkRows = function
+    | [] -> true
+    | row::rows -> rowChecker row && checkRows rows
   let rec transpose = function
     | []::_ -> []
     | rows ->
@@ -44,18 +52,5 @@ let check rowChecker s =
   let l = listify s
   checkRows l && checkRows (transpose l) && checkRows (rowifyBoxes l)
 
-let isValid s =
-  let rec isValidRow = function
-    | [] -> true
-    | (n:int)::ns ->
-        if n <> 0 && List.exists (fun x -> x=n) ns then false
-        else isValidRow ns
-  check isValidRow s
-
 let isDone s =
-  let rec isDoneRow = function
-    | [] -> true
-    | (n:int)::ns ->
-        if n = 0 || List.exists (fun x -> x=n) ns then false
-        else isDoneRow ns
-  check isDoneRow s
+  isValid s && List.sum (List.map List.sum (listify s)) = 405
